@@ -16,21 +16,21 @@ class VenuesController < ApplicationController
   end
 
   def create
-    @venue = Venue.new
+    # Parameters: {"query_address"=>"200 s wacker", "query_name"=>"dpi", "query_neighborhood"=>"downtown"}
+
+    venue = Venue.new
     venue.address = params.fetch("query_address")
-    venue.name = params.fetch("name")
-    venue.neighborhood = params.fetch("neighborhood")
+    venue.name = params.fetch("query_name")
+    venue.neighborhood = params.fetch("query_neighborhood")
     venue.save
 
-    redirect_to("/venues/#{venue.name}")
+    redirect_to("/venues/#{venue.id}")
   end
   
   def update
-
-    #Parameters: {"query_address"=>"133 Pfannerstill Knoll, Jovitamouth, ID 03841-4171", "query_name"=>"Big Creamery", "query_neighborhood"=>"Willow Oakssss", "the_id"=>"6"}
+   #  Parameters: {"query_address"=>"1417 Stan Trail, Lake Sandy, NY 32624", "query_name"=>"Red Brasserie", "query_neighborhood"=>"Paradise Crossingg", "the_id"=>"1"}
     the_id = params.fetch("the_id")
-
-    @venue = Venue.where({ :id => the_id })
+    venue = Venue.where({ :id => the_id }).at(0)
     venue.address = params.fetch("query_address")
     venue.name = params.fetch("query_name")
     venue.neighborhood = params.fetch("query_neighborhood")
@@ -40,11 +40,12 @@ class VenuesController < ApplicationController
   end
 
   def destroy
-    the_id = params.fetch("venue_id")
+    #  Parameters: {"id_to_delete"=>"1"}
+    the_id = params.fetch("id_to_delete")
     matching_venues = Venue.where({ :id => the_id })
-    venue = matching_venues
+    venue = matching_venues.first
     venue.destroy
-
+    
     redirect_to("/venues")
   end
 
